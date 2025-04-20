@@ -76,7 +76,7 @@ export async function fetchCompanies() {
 export async function fetchCompanyProfile(companyName) {
     try {
         showLoading();
-        const res = await fetch(`${PROFILE_URL}?company=${encodeURIComponent(companyName)}`, { headers: authHeader() });
+        const res = await fetch(`${PROFILE_URL}/${encodeURIComponent(companyName)}`, { headers: authHeader() });
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
         const profile = await res.json();
         return profile.full_summary || null;
