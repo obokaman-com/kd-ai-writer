@@ -46,7 +46,6 @@
             </svg>
             <span class="inline-block align-bottom">AI Writer</span>
         </div>
-        <!-- Role select -->
         <div class="relative w-full md:w-40">
             <select id="roleSelect" class="peer h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-krakend-blue transition">
                 <option value="generic" selected>Generic</option>
@@ -57,7 +56,6 @@
             </select>
             <label for="roleSelect" class="absolute left-3 -top-2 text-xs font-medium text-gray-500 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-focus:-top-2 peer-focus:text-xs bg-white px-1 transition-all">Role</label>
         </div>
-        <!-- Author select -->
         <div id="authorContainer" class="relative w-full md:w-40 hidden">
             <select id="authorSelect" class="peer h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-krakend-blue transition"></select>
             <label for="authorSelect" class="absolute left-3 -top-2 text-xs font-medium text-gray-500 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-focus:-top-2 peer-focus:text-xs bg-white px-1 transition-all">Author</label>
@@ -71,7 +69,7 @@
                     <option value="email_generic">Generic</option>
                     <option value="email_reply">Reply/Follow-up</option>
                     <option value="email_sales">Sales intro</option>
-                    <option value="email_support">Support</option>
+                    <option value="email_support">Support Ticket</option>
                 </optgroup>
                 <optgroup label="Meeting Minutes">
                     <option value="meeting_generic">Generic</option>
@@ -84,27 +82,16 @@
             </select>
             <label for="contentTypeSelect" class="absolute left-3 -top-2 text-xs font-medium text-gray-500 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-focus:-top-2 peer-focus:text-xs bg-white px-1 transition-all">Task</label>
         </div>
-        <!-- Company select (optional) -->
-        <div class="relative w-full md:w-40">
+        <div id="companyContainer" class="relative w-full md:w-40 hidden">
             <select id="companySelectTop" class="peer h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-krakend-blue transition">
                 <option value="" selected>Not necessary</option>
             </select>
-            <label for="companySelectTop" class="absolute left-3 -top-2 text-xs font-medium text-gray-500 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-focus:-top-2 peer-focus:text-xs bg-white px-1 transition-all">Company</label>
-        </div>
-        <!-- Customer select -->
-        <div id="identity-container" class="relative w-full md:w-40 hidden">
-            <select id="customerSelect" class="peer h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-krakend-blue transition">
-                <option value="" disabled selected hidden></option>
-            </select>
-            <label for="customerSelect" class="absolute left-3 -top-2 text-xs font-medium text-gray-500 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-focus:-top-2 peer-focus:text-xs bg-white px-1 transition-all">Company</label>
+            <label for="companySelectTop" class="absolute left-3 -top-2 text-xs font-medium text-gray-500 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-focus:-top-2 peer-focus:text-xs bg-white px-1 transition-all">CRM profile</label>
         </div>
         <button id="generateBtn" class="w-full md:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">Generate Draft</button>
 
-        <!-- Avatar + nombre + logout -->
         <div id="userProfile" class="hidden ml-auto flex items-center space-x-2">
-            <!-- Nombre -->
             <span id="userName" class="text-gray-700 font-medium"></span>
-            <!-- Avatar -->
             <img id="userAvatar"
                  class="w-8 h-8 rounded-full border border-gray-300"
                  src="" alt="User avatar" title="" />

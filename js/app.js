@@ -10,7 +10,6 @@ async function initApp() {
 
     let currentThreadId = null;
 
-    // Initial data load
     async function initCompanies() {
         const companies = await fetchCompanies();  // ← aquí esperamos a que llegue el array
         const topSelect = document.getElementById('companySelectTop');
@@ -64,8 +63,9 @@ async function initApp() {
     const roleSelect      = document.getElementById('roleSelect');
     const authorContainer = document.getElementById('authorContainer');
     const authorSelect    = document.getElementById('authorSelect');
+    const companyContainer= document.getElementById('companyContainer');
     const taskSelect   = document.getElementById('contentTypeSelect');
-    function updateAuthorOptions() {
+    function updateRoleDependantUI() {
         const role = roleSelect.value;
         authorSelect.innerHTML = '';
         let authors = [];
@@ -82,15 +82,21 @@ async function initApp() {
         } else {
             authorContainer.classList.add('hidden');
         }
+        if (role === 'sales') {
+            companyContainer.classList.remove('hidden');
+        } else {
+            companyContainer.classList.add('hidden');
+            document.getElementById('companySelectTop').value = '';
+        }
     }
-    roleSelect.addEventListener('change', updateAuthorOptions);
-    updateAuthorOptions();
+    roleSelect.addEventListener('change', updateRoleDependantUI);
+    updateRoleDependantUI();
 
     // Apply saved preferences
     if (prefs.role) {
         roleSelect.value = prefs.role;
     }
-    updateAuthorOptions();
+    updateRoleDependantUI();
     if (prefs.author) {
         authorSelect.value = prefs.author;
     }
@@ -103,7 +109,7 @@ async function initApp() {
         prefs.role = e.target.value;
         delete prefs.author;
         localStorage.setItem('kd_prefs', JSON.stringify(prefs));
-        updateAuthorOptions();
+        updateRoleDependantUI();
     });
     authorSelect.addEventListener('change', e => {
         prefs.author = e.target.value;
