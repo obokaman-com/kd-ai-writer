@@ -1,12 +1,14 @@
 import { initAuth, getAuthToken } from './auth.js';
 import { setAuthToken, fetchCompanies, fetchCompanyProfile, writeDraft } from './data.js';
-import { systemPrompt, rolePrompts, identityPrompts, taskPrompts } from './preferences.js';
+import { systemPrompt, rolePrompts, identityPrompts, taskPrompts, tweakPrompts } from './preferences.js';
 
 async function initApp() {
     setAuthToken(getAuthToken());
 
     // Restore preferences
     const prefs = JSON.parse(localStorage.getItem('kd_prefs') || '{}');
+
+    let currentThreadId = null;
 
     // Initial data load
     async function initCompanies() {
@@ -149,10 +151,47 @@ async function initApp() {
             const payload = { prompt: finalPrompt };
             const data = await writeDraft(payload);
             resultArea.innerHTML = data.output || '';
+            currentThreadId = data.threadId;
+            document.getElementById('tweakToolbar').classList.remove('hidden');
         } catch {
             // errors logged in data.js
         }
     });
+
+    async function applyTweak(type) {
+        if (!currentThreadId) return;
+        const tweakPrompt = tweakPrompts[type];
+        if (!tweakPrompt) return;
+
+        setButtonsDisabled(true);
+        try {
+            const data = await writeDraft({
+                prompt: tweakPrompt.trim(),
+                threadId: currentThreadId
+            });
+            resultArea.innerHTML = data.output || '';
+            currentThreadId = data.threadId;
+        } catch (err) {
+            console.error('Error applying tweak:', err);
+        }
+        finally {
+            setButtonsDisabled(false);
+        }
+    }
+
+    let tweakBtns = document
+        .querySelectorAll('#tweakToolbar button');
+
+    tweakBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.tweak;
+                applyTweak(type);
+            });
+        });
+
+    function setButtonsDisabled(disabled) {
+        tweakBtns.forEach(b => b.toggleAttribute('disabled', disabled));
+    }
 
     function sanitize(html) {
         const div = document.createElement('div');

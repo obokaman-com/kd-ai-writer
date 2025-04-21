@@ -3,6 +3,7 @@ const COMPANIES_URL  = AI_WRITER_API + '/companies-list';
 const PROFILE_URL    =  AI_WRITER_API + '/company-profile';
 const WRITE_URL      =  AI_WRITER_API + '/write';
 
+let _busy = false;
 let _token = null;
 export function setAuthToken(token) { _token = token; }
 function authHeader() { return { 'Authorization': 'Bearer ' + _token }; }
@@ -94,6 +95,11 @@ export async function fetchCompanyProfile(companyName) {
  * @returns {Promise<object>} response JSON with at least an `output` field
  */
 export async function writeDraft(prompt) {
+    if (_busy) {
+        // Ya hay una petición en curso, la ignoramos o devolvemos error
+        return Promise.reject(new Error('Request already in progress'));
+    }
+    _busy = true;
     try {
         showLoading();
         const res = await fetch(WRITE_URL, {
@@ -111,6 +117,7 @@ export async function writeDraft(prompt) {
         throw err;
     } finally {
         hideLoading();
+        _busy = false;
     }
 }
 

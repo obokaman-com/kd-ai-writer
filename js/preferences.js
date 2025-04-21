@@ -132,3 +132,35 @@ Plan and write an engaging blog post. First, reason through the target audience,
 Draft clear, concise release notes for a new KrakenD version. First, reason through the version highlights: group content into new features, improvements, bug fixes, and breaking changes, and decide on any upgrade recommendations. Then write the release notes below. Separate your reasoning and the notes with a horizontal line and several blank lines before and after. Use tight formatting (version header, bullet lists), a professional‑casual tone, and maintain KrakenD’s genuine voice. Never use the em dash character (—) under any circumstance.
 `
 };
+
+export const tweakPrompts = {
+    review: `
+You are an expert copy‑editor.
+1. Begin with a brief reasoning (1‑2 sentences) that explains the main fixes you will apply to the *main text* (typos, grammar, flow). You can just ignore the previous reasoning section.
+2. Add an horizontal line \`----\` on its own line.
+3. Provide the fully reviewed main text with the corrections applied.
+`,
+
+    improve: `
+You are a senior content strategist.
+1. Start with a short reasoning that states how you will enhance style, clarity and impact of the *main text*. You can just ignore the previous reasoning section.
+2. Insert an horizontal line \`----\`.
+3. Deliver the improved main text.
+`,
+
+    longer: `
+You are tasked with expanding the *main text*.
+1. Briefly reason where additional detail will add most value to the *main text* (audience, missing examples). You can just ignore the previous reasoning section.
+2. Put an horizontal line \`----\`.
+3. Output the extended main text, keeping tone and coherence.
+`,
+
+    shorter: `
+You are tasked with condensing the *main text*.
+1. Begin with a concise reasoning that identifies redundancies you will remove on the *main text*. You can just ignore the previous reasoning section.
+2. Follow with an horizontal line \`----\`.
+3. Present the condensed main text, preserving key information.
+`
+};
+
+
