@@ -121,20 +121,10 @@ export function initAuth(initApp) {
     };
 }
 
-/**
- * Permite que data.js reciba el token
- */
 export function setAuthToken(token) {
-    // data.js importará esta función para guardar _token
-    // o bien data.js puede llamar getAuthToken directamente
-    // Aquí simplemente se hace un stub; la lógica real de guardado
-    // se delega a data.js mediante import.
     window._appAuthToken = token;
 }
 
-/**
- * Permite leer el token desde otros módulos
- */
 export function getAuthToken() {
     return authToken;
 }

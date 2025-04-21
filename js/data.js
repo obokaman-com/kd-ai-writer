@@ -2,11 +2,12 @@ const AI_WRITER_API  = 'https://services.krakend.io/webhook/5001df30-59b2-498d-a
 const COMPANIES_URL  = AI_WRITER_API + '/companies-list';
 const PROFILE_URL    =  AI_WRITER_API + '/company-profile';
 const WRITE_URL      =  AI_WRITER_API + '/write';
+const CONTEXT_URL      =  AI_WRITER_API + '/context';
 
 let _busy = false;
-let _token = null;
-export function setAuthToken(token) { _token = token; }
-function authHeader() { return { 'Authorization': 'Bearer ' + _token }; }
+let _authToken = null;
+export function setAuthToken(token) { _authToken = token; }
+function authHeader() { return { 'Authorization': 'Bearer ' + _authToken }; }
 
 let loadingCount = 0;
 
@@ -120,4 +121,31 @@ export async function writeDraft(prompt) {
         _busy = false;
     }
 }
+
+/**
+ * Fetch context text for a given URL
+ * @param {string} url
+ * @returns {Promise<string|null>} el texto de contexto o null si falla
+ */
+export async function fetchContext(url) {
+    showLoading();
+    try {
+        const res = await fetch(CONTEXT_URL, {
+            method: 'POST',
+            headers: {
+                ...authHeader(),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: url })
+        });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return await res.json();
+    } catch (err) {
+        console.error('Error fetching context:', err);
+        throw err;
+    } finally {
+        hideLoading();
+    }
+}
+
 

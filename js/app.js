@@ -1,5 +1,5 @@
 import { initAuth, getAuthToken } from './auth.js';
-import { setAuthToken, fetchCompanies, fetchCompanyProfile, writeDraft } from './data.js';
+import { setAuthToken, fetchCompanies, fetchCompanyProfile, writeDraft, fetchContext } from './data.js';
 import { systemPrompt, rolePrompts, identityPrompts, taskPrompts, tweakPrompts } from './preferences.js';
 
 async function initApp() {
@@ -292,6 +292,100 @@ async function initApp() {
             console.error('Error applying custom tweak:', error);
         } finally {
             controlButtons.forEach(btn => btn.removeAttribute('disabled'));
+        }
+    });
+
+    const contextImportModal     = document.getElementById('contextImportModal');
+    const contextImportDialog    = document.getElementById('contextImportDialog');
+    const contextImportUrlLabel  = document.getElementById('contextImportUrl');
+    const cancelImportBtn        = document.getElementById('cancelImportBtn');
+    const confirmImportBtn       = document.getElementById('confirmImportBtn');
+
+    function promptImportContext(url) {
+        contextImportUrlLabel.textContent = url;
+        contextImportModal.classList.remove('hidden');
+        // anima in
+        requestAnimationFrame(() => {
+            contextImportDialog.classList.remove('scale-95', 'opacity-0');
+        });
+
+        return new Promise(resolve => {
+            cancelImportBtn.onclick = () => resolve(false);
+            confirmImportBtn.onclick = () => resolve(true);
+
+            function cleanup() {
+                contextImportModal.classList.add('hidden');
+                document.removeEventListener('keydown', onKey);
+                contextImportModal.removeEventListener('click', onBackdrop);
+            }
+            function onKey(e) {
+                if (e.key === 'Escape') resolve(false);
+            }
+            function onBackdrop(e) {
+                if (e.target === contextImportModal) resolve(false);
+            }
+            document.addEventListener('keydown', onKey);
+            contextImportModal.addEventListener('click', onBackdrop);
+
+            resolve = ((origResolve) => val => {
+                origResolve(val);
+                cleanup();
+            })(resolve);
+        });
+    }
+
+    async function showErrorModal(message) {
+        document.querySelector('#contextImportDialog h3').textContent = '⚠️ Error';
+        document.getElementById('contextImportUrl').textContent = message;
+        confirmImportBtn.classList.add('hidden');
+        cancelImportBtn.textContent = 'Close';
+
+        contextImportModal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            contextImportDialog.classList.remove('scale-95', 'opacity-0');
+        });
+
+        await new Promise(resolve => {
+            cancelImportBtn.onclick = () => resolve();
+            contextImportModal.addEventListener('click', e => {
+                if (e.target === contextImportModal) resolve();
+            }, { once: true });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') resolve();
+            }, { once: true });
+        });
+
+        contextImportDialog.classList.add('scale-95', 'opacity-0');
+        contextImportDialog.addEventListener('transitionend', () => {
+            contextImportModal.classList.add('hidden');
+            document.querySelector('#contextImportDialog h3').textContent = 'Import context';
+            confirmImportBtn.classList.remove('hidden');
+            cancelImportBtn.textContent = 'Cancel';
+        }, { once: true });
+    }
+
+    function isContextUrl(url) {
+        try {
+            const { host } = new URL(url);
+            return host.includes('support.krakend.io');
+        } catch {
+            return false;
+        }
+    }
+
+    templateArea.addEventListener('paste', async e => {
+        const pasted = e.clipboardData.getData('text').trim();
+        if (!isContextUrl(pasted)) return;
+
+        e.preventDefault();
+
+        const shouldImport = await promptImportContext(pasted);
+        if (!shouldImport) return;
+        try{
+            const ctx = await fetchContext(pasted);
+            templateArea.value = ctx.output;
+        } catch (err) {
+            await showErrorModal('Couldn\'t recover context from that URL: ' + err);
         }
     });
 }
