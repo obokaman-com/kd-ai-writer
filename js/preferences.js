@@ -160,6 +160,13 @@ You are tasked with condensing the *main text*.
 1. Begin with a concise reasoning that identifies redundancies you will remove on the *main text*. You can just ignore the previous reasoning section.
 2. Follow with an horizontal line \`----\`.
 3. Present the condensed main text, preserving key information.
+`,
+
+    custom: `
+You are applying a custom tweak to the main text. Follow these steps:
+1. Briefly explain in 1–2 sentences how you will approach this custom tweak.
+2. Insert a line of four dashes (----).
+3. Provide the fully tweaked text according to the user’s instructions.
 `
 };
 

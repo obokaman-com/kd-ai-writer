@@ -230,6 +230,64 @@ async function initApp() {
         e.clipboardData.setData('text/html', html);
         e.clipboardData.setData('text/plain', text);
     });
+
+    const customTweakButton   = document.getElementById('customTweakBtn');
+    const customTweakModal    = document.getElementById('customModal');
+    const customTweakDialog   = document.getElementById('customDialog');
+    const cancelCustomButton  = document.getElementById('cancelCustom');
+    const applyCustomButton   = document.getElementById('applyCustom');
+    const customTweakTextarea = document.getElementById('customInput');
+
+    function showCustomTweakModal() {
+        customTweakTextarea.value = '';
+        customTweakModal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            customTweakDialog.classList.remove('scale-95', 'opacity-0');
+        });
+        customTweakTextarea.focus();
+    }
+
+    function hideCustomTweakModal() {
+        customTweakDialog.classList.add('scale-95', 'opacity-0');
+        customTweakDialog.addEventListener('transitionend', () => {
+            customTweakModal.classList.add('hidden');
+        }, { once: true });
+    }
+
+    customTweakButton.addEventListener('click', showCustomTweakModal);
+    cancelCustomButton.addEventListener('click', hideCustomTweakModal);
+    customTweakModal.addEventListener('click', e => {
+        if (e.target === customTweakModal) hideCustomTweakModal();
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !customTweakModal.classList.contains('hidden')) {
+            hideCustomTweakModal();
+        }
+    });
+
+    applyCustomButton.addEventListener('click', async () => {
+        const tweakText = customTweakTextarea.value.trim();
+        if (!tweakText) {
+            return customTweakTextarea.focus();
+        }
+
+        hideCustomTweakModal();
+
+        const controlButtons = document.querySelectorAll('#tweakToolbar button, #generateBtn');
+        controlButtons.forEach(btn => btn.setAttribute('disabled', ''));
+
+        const prompt = (tweakPrompts.custom + '\n\n' + tweakText).trim();
+
+        try {
+            const response = await writeDraft({ prompt, threadId: currentThreadId });
+            resultArea.innerHTML = response.output || '';
+            currentThreadId = response.threadId;
+        } catch (error) {
+            console.error('Error applying custom tweak:', error);
+        } finally {
+            controlButtons.forEach(btn => btn.removeAttribute('disabled'));
+        }
+    });
 }
 
 initAuth(initApp);
