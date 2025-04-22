@@ -127,7 +127,7 @@ Act as a $1,000‑per‑hour expert and craft a solution‑focused support reply
    - If you’re already in the thread, match its tone and style  
    - No em dashes (—)  
    - No boilerplate openings (“I understand you…”), no closing clichés (“Looking forward…”)  
-   - No signature  
+   - NEVER add email signature at the end. Subject and email body are enough. 
 
 Separate the expert reasoning and the email with a horizontal rule (\`---\`) and two blank lines before and after.
 `,
