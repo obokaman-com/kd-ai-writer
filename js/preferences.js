@@ -74,29 +74,27 @@ Luis Martín at Finance team.
  */
 export const taskPrompts = {
     email_generic: `
-Write a high-impact, analytically sharp, brief and direct email in your name. You can start by reasoning the best approach, and then write the email below. Separate reasoning and the email with an horizontal line with several breaklines before and after. 
-- Use sound structure, tight formatting, and a professional-casual tone. 
+Write a brief, direct and professional-casual email in your name. You can start by reasoning the best approach, and then write the email below. You can start with a detailed reasoning like a $1,000 per hour expert with the best approach, and then write the email below. Separate reasoning and the email with an horizontal line with several breaklines before and after. 
 - Keep KrakenD genuine voice. 
-- Never use the em dash character (—) under any circumstance. 
-- Don't include unnecessary opening/closing cliche formulas. 
-- No need to add email signature at the end. Subject and email body are enough.
+- NEVER use the em dash character (—) under any circumstance. 
+- NEVER include unnecessary opening or closing cliche formulas (like the typical "I understand you're [whatever]" or "Thanks for reaching out" at the beginning or the "Looking forward to our [whatever]" and similar at the end.
+- NEVER add email signature at the end. Subject and email body are enough. 
 `,
     email_reply: `
-Write a high-impact, analytically sharp, brief and direct reply or follow‑up email in your name (clarify if you're replying or following up to other's email or thread). You can start by reasoning the best approach, and then write the email below. Separate reasoning and the email with an horizontal line with several breaklines before and after. 
-- Use sound structure, tight formatting. 
-- If you're already present in the thread, mimic your tone and writing style. Otherwise, just use a professional-casual tone and style by default. 
+Write brief, direct and professional-casual reply or follow‑up email in your name (clarify if you're replying or following up to other's email or thread). You can start with a detailed reasoning like a $1,000 per hour expert with the best approach, and then write the email below. Separate reasoning and the email with an horizontal line with several breaklines before and after. 
+- If you're already present in the thread, mimic your previous tone and writing style. 
 - Never use the em dash character (—) under any circumstance. 
-- Don't include unnecessary opening/closing cliche formulas. 
-- No need to add email signature at the end. Subject and email body are enough. 
+- NEVER include unnecessary opening or closing cliche formulas (like the typical "I understand you're [whatever]" or "Thanks for reaching out" at the beginning or the "Looking forward to our [whatever]" and similar at the end.
+- NEVER add email signature at the end. Subject and email body are enough. 
 - Write in the same language from the previous emails. Make it sound natural and native. 
 `,    email_sales: `
-Write a high‑impact, analytically sharp, brief and direct introductory sales email in your name. Use the following base intro sales email template as inspiration—adapt its key elements (acknowledge interest, highlight KrakenD’s value props, cite customer examples, reference attached overview, propose a call) to the specific prospect and request.
+Write a brief, direct and professional-casual introductory sales email in your name. Use the following base intro sales email template as inspiration—adapt its key elements (acknowledge interest, highlight KrakenD’s value props, cite customer examples, reference attached overview, propose a call) to the specific prospect and request.
 
 Base Intro Sales Email Template:
 ====
 Hi [Name],
 
-Thanks for your interest in KrakenD Enterprise—happy to connect and help you explore how we can support your API infrastructure goals.
+Thanks for your interest in KrakenD Enterprise. Happy to connect and help you explore how we can support your API infrastructure goals.
 
 KrakenD is built to eliminate the operational burden of managing APIs at scale. Our Enterprise edition delivers high performance, true linear scalability, and security‑by‑design without the complexity, vendor lock‑in, or unpredictable costs of legacy API gateways. That’s why global teams at American Express, LG, and the US Navy trust us in production.
 
@@ -110,14 +108,28 @@ Best regards,
 You can start by reasoning the best approach, and then write the email below.  
 Separate reasoning and the email with an horizontal line and several blank lines before and after.
 
-- Use sound structure, tight formatting, and a professional‑casual tone.  
 - Keep KrakenD’s genuine voice.  
 - Never use the em dash character (–) under any circumstance.  
-- Don’t include unnecessary opening or closing clichés.  
-- No email signature needed—just the Subject line and email body.
+- NEVER include unnecessary opening or closing cliche formulas (like the typical "I understand you're [whatever]" or "Thanks for reaching out" at the beginning or the "Looking forward to our [whatever]" and similar at the end.
+- NEVER add email signature at the end. Subject and email body are enough. 
 `,
     email_support: `
-Write an empathetic, solution‑focused support email. First, reason through the user’s issue: summarize the problem, empathize with their situation, outline potential solutions, and propose next steps. Then compose the email below. Separate your reasoning and the email with a horizontal line and several blank lines before and after. Use a friendly but professional tone, clear structure, and maintain KrakenD’s genuine voice. Never use the em dash character (—) under any circumstance. No need to add email signature at the end. Subject and email body are enough.
+Act as a $1,000‑per‑hour expert and craft a solution‑focused support reply or follow-up in your name. 
+
+1. Reasoning (as the expert):  
+   - Summarize the customer’s problem  
+   - Outline two or three realistic solutions  
+   - Propose clear next steps  
+
+2. Email:  
+   - Provide only Subject and Body  
+   - Friendly, professional-casual, in KrakenD’s voice  
+   - If you’re already in the thread, match its tone and style  
+   - No em dashes (—)  
+   - No boilerplate openings (“I understand you…”), no closing clichés (“Looking forward…”)  
+   - No signature  
+
+Separate the expert reasoning and the email with a horizontal rule (\`---\`) and two blank lines before and after.
 `,
     meeting_generic: `
 I’ll provide a meeting transcript—your task is to deliver high-precision strategic minutes: attendees 📋, topics 🗣️, decisions ✅, action items 📌, data insights 📊, and follow-ups 🔄. Stick closely to the transcript and capture what truly matters.
