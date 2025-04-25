@@ -163,8 +163,12 @@ async function initApp() {
             // Use the unified prompt in the payload
             const payload = { prompt: finalPrompt };
             const data = await writeDraft(payload);
-            const html = window.mdRenderer.render(data.output || '');
-            resultArea.innerHTML = DOMPurify.sanitize(html);
+            let html = window.mdRenderer.render(data.output || '');
+            html = DOMPurify.sanitize(html);
+            html = html.replace(/<\/p>\s*<p>/g, '<br><br>');
+            html = html.replace(/<\/?p>/g, '');
+            html = html.replace(/(<br><br>\s*)+$/g, '').trim();
+            resultArea.innerHTML = html;
             currentThreadId = data.threadId;
             document.getElementById('tweakToolbar').classList.remove('hidden');
         } catch {
@@ -183,8 +187,12 @@ async function initApp() {
                 prompt: tweakPrompt.trim(),
                 threadId: currentThreadId
             });
-            const html = window.mdRenderer.render(data.output || '');
-            resultArea.innerHTML = DOMPurify.sanitize(html);
+            let html = window.mdRenderer.render(data.output || '');
+            html = DOMPurify.sanitize(html);
+            html = html.replace(/<\/p>\s*<p>/g, '<br><br>');
+            html = html.replace(/<\/?p>/g, '');
+            html = html.replace(/(<br><br>\s*)+$/g, '').trim();
+            resultArea.innerHTML = html;
             currentThreadId = data.threadId;
         } catch (err) {
             console.error('Error applying tweak:', err);
