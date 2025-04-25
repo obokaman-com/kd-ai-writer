@@ -4,31 +4,54 @@ const PROFILE_URL    =  AI_WRITER_API + '/company-profile';
 const WRITE_URL      =  AI_WRITER_API + '/write';
 const CONTEXT_URL      =  AI_WRITER_API + '/context';
 
-let _busy = false;
 let _authToken = null;
+let _busy      = false;
+let _controller = null;
+
 export function setAuthToken(token) { _authToken = token; }
 function authHeader() { return { 'Authorization': 'Bearer ' + _authToken }; }
-
-let loadingCount = 0;
-
-/**
- * Show a floating loading indicator with animated dots
- */
-export function showLoading() {
-    loadingCount++;
-    if (loadingCount === 1) {
-        const ind = document.getElementById('loadingIndicator');
-        ind.classList.remove('hidden');
+export function cancelRequest() {
+    if (_controller) {
+        _controller.abort();
+        _controller = null;
     }
 }
 
-/**
- * Hide the loading indicator when all requests complete
- */
-export function hideLoading() {
-    loadingCount = Math.max(0, loadingCount - 1);
-    if (loadingCount === 0) {
-        document.getElementById('loadingIndicator').classList.add('hidden');
+function showLoading() {
+    const ind = document.getElementById('loadingIndicator');
+    if (ind) ind.classList.remove('hidden');
+}
+
+function hideLoading() {
+    const ind = document.getElementById('loadingIndicator');
+    if (ind) ind.classList.add('hidden');
+}
+
+async function apiFetch(url, opts = {}) {
+    if (_busy) {
+        return Promise.reject(new Error('Another ongoing request'));
+    }
+    _busy = true;
+    _controller = new AbortController();
+    showLoading();
+
+    try {
+        const res = await fetch(url, {
+            ...opts,
+            signal: _controller.signal
+        });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return await res.json();
+    } catch (err) {
+        if (err.name === 'AbortError') {
+            console.warn('Aborted request:', url);
+            return Promise.reject(err);
+        }
+        return Promise.reject(err);
+    } finally {
+        hideLoading();
+        _busy = false;
+        _controller = null;
     }
 }
 
@@ -39,113 +62,53 @@ export async function fetchCompanies() {
     const CACHE_KEY = 'kd_companies';
     const CACHE_TS  = 'kd_companies_ts';
     const now = Date.now();
-    let companies = [];
+    const ts  = parseInt(localStorage.getItem(CACHE_TS) || '0', 10);
 
-    // Try cache
-    const ts = parseInt(localStorage.getItem(CACHE_TS) || '0', 10);
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached && now - ts < 3 * 60 * 60 * 1000) {
+    if (now - ts < 3 * 60 * 60 * 1000) {
         try {
-            companies = JSON.parse(cached);
-            return companies;
-        } catch (e) {
-            console.warn('Invalid companies cache, fetching fresh:', e);
-        }
+            return JSON.parse(localStorage.getItem(CACHE_KEY) || '[]');
+        } catch {}
     }
 
-    // Fetch fresh
-    try {
-        showLoading();
-        const res = await fetch(COMPANIES_URL, { headers: authHeader() });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        let companies = await res.json();
-        // Cache
-        localStorage.setItem(CACHE_KEY, JSON.stringify(companies));
-        localStorage.setItem(CACHE_TS, now.toString());
-        return JSON.parse(JSON.stringify(companies));
-    } catch (err) {
-        console.error('Error loading companies:', err);
-    } finally {
-        hideLoading();
-    }
+    const companies = await apiFetch(COMPANIES_URL, {
+        headers: authHeader()
+    });
+    localStorage.setItem(CACHE_KEY, JSON.stringify(companies));
+    localStorage.setItem(CACHE_TS, now.toString());
+    return companies;
 }
 
-/**
- * Fetch profile summary for a given company name
- * @param {string} companyName
- * @returns {Promise<string|null>} full_summary or null
- */
 export async function fetchCompanyProfile(companyName) {
     try {
-        showLoading();
-        const res = await fetch(`${PROFILE_URL}/${encodeURIComponent(companyName)}`, { headers: authHeader() });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        const profile = await res.json();
-        return profile.full_summary || null;
-    } catch (err) {
-        console.error('Error loading company profile:', err);
+        const json = await apiFetch(
+            `${PROFILE_URL}/${encodeURIComponent(companyName)}`,
+            { headers: authHeader() }
+        );
+        return json.full_summary || null;
+    } catch {
         return null;
-    } finally {
-        hideLoading();
     }
 }
 
-/**
- * Send a draft generation request to the AI writer API
- * @param {Object} payload - { template, user, user_prompt, company_context, task }
- * @returns {Promise<object>} response JSON with at least an `output` field
- */
-export async function writeDraft(prompt) {
-    if (_busy) {
-        // Ya hay una petición en curso, la ignoramos o devolvemos error
-        return Promise.reject(new Error('Request already in progress'));
-    }
-    _busy = true;
-    try {
-        showLoading();
-        const res = await fetch(WRITE_URL, {
-            method: 'POST',
-            headers: {
-                ...authHeader(),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(prompt)
-        });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        return await res.json();
-    } catch (err) {
-        console.error('Error generating draft:', err);
-        throw err;
-    } finally {
-        hideLoading();
-        _busy = false;
-    }
+export async function writeDraft(payload) {
+    return apiFetch(WRITE_URL, {
+        method: 'POST',
+        headers: {
+            ...authHeader(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    });
 }
 
-/**
- * Fetch context text for a given URL
- * @param {string} url
- * @returns {Promise<string|null>} el texto de contexto o null si falla
- */
 export async function fetchContext(url) {
-    showLoading();
-    try {
-        const res = await fetch(CONTEXT_URL, {
-            method: 'POST',
-            headers: {
-                ...authHeader(),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ url: url })
-        });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        return await res.json();
-    } catch (err) {
-        console.error('Error fetching context:', err);
-        throw err;
-    } finally {
-        hideLoading();
-    }
+    const json = await apiFetch(CONTEXT_URL, {
+        method: 'POST',
+        headers: {
+            ...authHeader(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url })
+    });
+    return json.output;
 }
-
-

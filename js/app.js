@@ -1,14 +1,13 @@
 import { initAuth, getAuthToken } from './auth.js';
-import { setAuthToken, fetchCompanies, fetchCompanyProfile, writeDraft, fetchContext } from './data.js';
+import { setAuthToken, fetchCompanies, fetchCompanyProfile, writeDraft, fetchContext, cancelRequest } from './data.js';
 import { systemPrompt, rolePrompts, identityPrompts, taskPrompts, tweakPrompts } from './preferences.js';
 
 async function initApp() {
     setAuthToken(getAuthToken());
-
-    // Restore preferences
     const prefs = JSON.parse(localStorage.getItem('kd_prefs') || '{}');
-
     let currentThreadId = null;
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cancelRequest(); });
 
     async function initCompanies() {
         const companies = await fetchCompanies();  // ← aquí esperamos a que llegue el array
