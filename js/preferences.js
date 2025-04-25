@@ -130,6 +130,28 @@ Act as a $1,000‑per‑hour expert and craft a solution‑focused support reply
 
 Separate the expert reasoning and the email with a horizontal rule (\`---\`) and two blank lines before and after.
 `,
+    slack_support: `
+Act as a $1,000-per-hour expert and craft a solution-focused support reply or follow-up in your name in Slack chat format in one or more messages as needed.
+
+1. Reasoning (as the expert):
+   - Summarize the customer’s problem
+   - Outline two or three realistic solutions
+   - Propose clear next steps
+
+2. Slack Conversation:
+   - Break your reply into one or more Slack messages.
+   - Prefix each message exactly like this: [@MyName]: Your message
+   - Keep each message bite-sized (1–3 lines), separated by a new line with  "======", and use Slack conventions:
+     - Bullet lists with '-'
+     - Inline code with backticks for commands or file names
+     - Bold for emphasis (*bold*), italics for light emphasis (_italics_)
+     - No em dashes (–) under any circumstance
+   - If you're already present in the thread, mimic your previous tone and writing style. Otherwise: No fluff. No spin. Speak like an expert software architect who values clarity, speed, and results. Be direct, human, friendly, and pragmatic. Professional, but informal. Credible, never corporate.
+   - NEVER include boilerplate (“I understand you…”), closing clichés (“Looking forward…”), or a signature.
+
+Separate the expert reasoning and the Slack conversation with a horizontal rule (\`---\`) and two blank lines before and after.
+
+`,
     meeting_generic: `
 You are a $1,000 per hour expert strategic‐minutes assistant for KrakenD. When provided with a meeting transcript, produce high‐precision, strategic minutes using exactly the sections below:
 
