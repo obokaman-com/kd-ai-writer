@@ -66,18 +66,19 @@
                 <option value="" disabled selected hidden>Select Task...</option>
                 <option value="empty">Blank</option>
                 <optgroup label="Email">
-                    <option value="email_generic">Generic</option>
+                    <option value="email_generic">New Email</option>
                     <option value="email_reply">Reply/Follow-up</option>
-                    <option value="email_sales">Sales intro</option>
+                    <option value="email_sales">Sales Intro</option>
                     <option value="email_support">Support Ticket</option>
                 </optgroup>
                 <optgroup label="Meeting Minutes">
-                    <option value="meeting_generic">Generic</option>
-                    <option value="meeting_sales">Sales meeting</option>
+                    <option value="meeting_generic">Generic Meeting</option>
+                    <option value="meeting_sales">Sales Meeting</option>
+                    <option value="meeting_gartner">Expert review</option>
                 </optgroup>
                 <optgroup label="Blog post">
-                    <option value="blog_generic">Generic</option>
-                    <option value="blog_release">Release notes</option>
+                    <option value="blog_generic">Generic Article</option>
+                    <option value="blog_release">Release Notes</option>
                 </optgroup>
             </select>
             <label for="contentTypeSelect" class="absolute left-3 -top-2 text-xs font-medium text-gray-500 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-focus:-top-2 peer-focus:text-xs bg-white px-1 transition-all">Task</label>
@@ -159,10 +160,16 @@ Or paste a Freshdesk URL and see magic happen. ;)"></textarea>
         </div>
     </div>
 </main>
-<!-- Scripts -->
+<!-- Split UI -->
 <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+<!-- Autocomplete dropdown -->
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<!-- Google Auth -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+<!-- Sanitize HTML -->
+<script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
 
 <!-- Load modules: data.js will be imported by app.js -->
 <script type="module" src="js/app.js"></script>

@@ -23,10 +23,10 @@ async function initApp() {
         const choices = new Choices(topSelect, {
             placeholderValue: 'Choose a company…',
             searchPlaceholderValue: 'Write to filter…',
-            shouldSort: false,        // que conserve el orden original
-            searchResultLimit: 100,   // muestra máximo 100 coincidencias
-            itemSelectText: '',       // elimina el "Presiona Enter para seleccionar"
-            removeItemButton: false,  // sin botón de eliminación porque es single-select
+            shouldSort: false,
+            searchResultLimit: 100,
+            itemSelectText: '',
+            removeItemButton: false,
         });
     }
     initCompanies();
@@ -132,6 +132,13 @@ async function initApp() {
         templateArea.value = await fetchCompanyProfile(companyName) || '';
     });
 
+    const md = window.markdownit({
+        html:        false,
+        linkify:     true,
+        typographer: true
+    });
+    window.mdRenderer = md;
+
     // Generate Draft button handler
     const generateBtn  = document.getElementById('generateBtn');
     const promptArea   = document.getElementById('promptArea');
@@ -145,10 +152,10 @@ async function initApp() {
         const task = taskSelect.value;
         //parts.push(systemPrompt.trim());
         if (rolePrompts[role]) parts.push('## YOUR ROLE\n'+rolePrompts[role].trim());
-        if (identityPrompts[author]) parts.push('## YOU SHOULD ACT AS\n'+identityPrompts[author].trim());
+        if (identityPrompts[author]) parts.push('## YOU SHOULD TALK AS\n'+identityPrompts[author].trim());
         if (taskPrompts[task]) parts.push('## YOUR TASK\n'+taskPrompts[task].trim());
+        if (promptArea.value) parts.push(`## INSTRUCTIONS:\n${promptArea.value.trim()}`);
         if (templateArea.value) parts.push(`## SOME ADDITIONAL CONTEXT:\n${templateArea.value.trim()}`);
-        if (promptArea.value)   parts.push(`## INSTRUCTIONS:\n${promptArea.value.trim()}`);
 
         const finalPrompt = parts.join('\n\n');
 
@@ -156,7 +163,8 @@ async function initApp() {
             // Use the unified prompt in the payload
             const payload = { prompt: finalPrompt };
             const data = await writeDraft(payload);
-            resultArea.innerHTML = data.output || '';
+            const html = window.mdRenderer.render(data.output || '');
+            resultArea.innerHTML = DOMPurify.sanitize(html);
             currentThreadId = data.threadId;
             document.getElementById('tweakToolbar').classList.remove('hidden');
         } catch {
@@ -175,7 +183,8 @@ async function initApp() {
                 prompt: tweakPrompt.trim(),
                 threadId: currentThreadId
             });
-            resultArea.innerHTML = data.output || '';
+            const html = window.mdRenderer.render(data.output || '');
+            resultArea.innerHTML = DOMPurify.sanitize(html);
             currentThreadId = data.threadId;
         } catch (err) {
             console.error('Error applying tweak:', err);
