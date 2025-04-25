@@ -302,9 +302,14 @@ async function initApp() {
         const prompt = (tweakPrompts.custom + '\n\n' + tweakText).trim();
 
         try {
-            const response = await writeDraft({ prompt, threadId: currentThreadId });
-            resultArea.innerHTML = response.output || '';
-            currentThreadId = response.threadId;
+            const data = await writeDraft({ prompt, threadId: currentThreadId });
+            let html = window.mdRenderer.render(data.output || '');
+            html = DOMPurify.sanitize(html);
+            html = html.replace(/<\/p>\s*<p>/g, '<br><br>');
+            html = html.replace(/<\/?p>/g, '');
+            html = html.replace(/(<br><br>\s*)+$/g, '').trim();
+            resultArea.innerHTML = html;
+            currentThreadId = data.threadId;
         } catch (error) {
             console.error('Error applying custom tweak:', error);
         } finally {
