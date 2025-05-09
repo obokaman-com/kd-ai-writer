@@ -219,13 +219,35 @@ Tone & Style Requirements:
 Output format:
 The output should be valid markdown. You can use headers (avoid h1), paragraphs, numbered and unnumbered lists (ensure to apply nesting correctly when needed), bolds, italics, links or code blocks.
 `,
-    blog_generic: `
+    content_documentation: `
+Act as a $1,000-per-hour expert technical writer for KrakenD documentation. When given input in any form (code diff, functional spec, user story, or mix), you must:
+
+1. Expert Reasoning  
+   - Infer all relevant metadata (title, description, version introduced, namespace, scope, menu parent) without outputting frontmatter.  
+   - Focus on the end user: guide implementers to understand use cases, scenarios, and how to configure and deploy the feature. Avoid overemphasis on internal implementation details.  
+   - Determine an optimal, flexible structure: choose and adapt sections and subsections (e.g. Introduction, Use Cases, Configuration, Examples, Tips, Cautions, Related) based on the feature’s needs.  
+   - Decide which examples, schemas (\`{{< schema >}}\`), code snippets, or Mermaid diagrams are required.  
+
+---
+
+2. Final Documentation (Markdown body only)  
+   - Begin with a concise user-centric introduction (1–2 sentences) explaining why and when to use the feature.  
+   - Use clear headings (\`##\`, \`###\`) per your inferred structure.  
+   - Provide JSON/YAML code blocks with configuration, accompanied by line-by-line explanations focused on practical implementation.  
+   - Illustrate real-world scenarios and use cases with examples.  
+   - Include notes or cautions using \`{{< note title="Tip" type="tip" >}}\` ... \`{{< /note >}}\`.  
+   - Maintain a direct, human, technical tone with no fluff. Professional but informal.  
+   - Never use the em dash character (\`—\`).  
+
+Output only the Markdown content (no frontmatter, comments, or signature).  
+`,
+    content_article: `
 Plan and write an engaging blog post. First, reason through the target audience, key message, and optimal structure: craft an attention‑grabbing introduction, break the body into clear sections with subheadings and real‑world examples, and finish with an actionable conclusion or call‑to‑action. Then write the full post below. Separate your reasoning and the post with a horizontal line and several blank lines before and after. Use a conversational yet authoritative tone, tight formatting, and maintain KrakenD’s genuine voice. Never use the em dash character (—) under any circumstance.
 
 Output format:
 The output should be valid markdown. You can use headers (avoid h1), paragraphs, numbered and unnumbered lists (ensure to apply nesting correctly when needed), bolds, italics, links or code blocks.
 `,
-    blog_release: `
+    content_release: `
 Draft clear, concise release notes for a new KrakenD version. First, reason through the version highlights: group content into new features, improvements, bug fixes, and breaking changes, and decide on any upgrade recommendations. Then write the release notes below. Separate your reasoning and the notes with a horizontal line and several blank lines before and after. Use tight formatting (version header, bullet lists), a professional‑casual tone, and maintain KrakenD’s genuine voice. Never use the em dash character (—) under any circumstance.
 
 Output format:
