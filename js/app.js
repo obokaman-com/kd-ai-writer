@@ -403,8 +403,7 @@ async function initApp() {
         const shouldImport = await promptImportContext(pasted);
         if (!shouldImport) return;
         try{
-            const ctx = await fetchContext(pasted);
-            templateArea.value = ctx.output;
+            templateArea.value = await fetchContext(pasted);
         } catch (err) {
             await showErrorModal('Couldn\'t recover context from that URL: ' + err);
         }
