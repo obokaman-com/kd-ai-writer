@@ -388,7 +388,7 @@ async function initApp() {
     function isContextUrl(url) {
         try {
             const { host } = new URL(url);
-            return host.includes('support.krakend.io');
+            return host.includes('support.krakend.io') || host.includes('github.com') || host.includes('app.shortcut.com');
         } catch {
             return false;
         }
