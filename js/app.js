@@ -1,6 +1,6 @@
 import { initAuth, getAuthToken } from './auth.js';
 import { setAuthToken, fetchCompanies, fetchCompanyProfile, writeDraft, fetchContext, cancelRequest } from './data.js';
-import { systemPrompt, rolePrompts, identityPrompts, taskPrompts, tweakPrompts } from './preferences.js';
+import { rolePrompts, identityPrompts, taskPrompts, tweakPrompts } from './preferences.js';
 
 async function initApp() {
     setAuthToken(getAuthToken());
@@ -68,8 +68,8 @@ async function initApp() {
         const role = roleSelect.value;
         authorSelect.innerHTML = '';
         let authors = [];
-        if (role === 'sales')       authors = ['Albert Lombarte','Albert García','Toni Pinel'];
-        else if (role === 'support') authors = ['Daniel López','Daniel Ortiz','David Hontecillas','Jorge Tarrero'];
+        if (role === 'business')       authors = ['Albert Lombarte','Albert García','Toni Pinel'];
+        else if (role === 'technical') authors = ['Daniel López','Daniel Ortiz','David Hontecillas','Jorge Tarrero'];
         else if (role === 'finance') authors = ['Luis Martín'];
         if (authors.length) {
             authorContainer.classList.remove('hidden');
@@ -81,7 +81,7 @@ async function initApp() {
         } else {
             authorContainer.classList.add('hidden');
         }
-        if (role === 'sales') {
+        if (role === 'business') {
             companyContainer.classList.remove('hidden');
         } else {
             companyContainer.classList.add('hidden');
@@ -149,7 +149,6 @@ async function initApp() {
         const role = roleSelect.value;
         const author = authorSelect.value;
         const task = taskSelect.value;
-        //parts.push(systemPrompt.trim());
         if (rolePrompts[role]) parts.push('## YOUR ROLE\n'+rolePrompts[role].trim());
         if (identityPrompts[author]) parts.push('## YOU SHOULD TALK AS\n'+identityPrompts[author].trim());
         if (taskPrompts[task]) parts.push('## YOUR TASK\n'+taskPrompts[task].trim());
